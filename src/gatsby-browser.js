@@ -74,6 +74,7 @@ const defaultOptions = {
   excludePaths: [],
   height: 3,
   prependToBody: false,
+  appendToElement: false,
   color: `#663399`,
   footerHeight: 0,
   headerHeight: 0,
@@ -84,14 +85,15 @@ export const onRouteUpdate = ({ location: { pathname } }, pluginOptions = {}) =>
   // merge default options with user defined options in `gatsby-config.js`
   const options = { ...defaultOptions, ...pluginOptions };
 
-  const { includePaths, excludePaths, height, prependToBody, color, footerHeight, headerHeight } = options;
+  const { includePaths, excludePaths, height, prependToBody, appendToElement, color, footerHeight, headerHeight } = options;
 
   function pageProgress() {
     // create progress indicator container and append/prepend to document body
     const node = document.createElement(`div`);
     node.id = `gatsby-plugin-page-progress`;
     // eslint-disable-next-line
-    prependToBody ? document.body.prepend(node) : document.body.append(node);
+    prependToBody && !appendToElement ? document.body.prepend(node) : document.body.append(node);
+    appendToElement ? document.querySelector(appendToElement).append(node) : false;
 
     // set defaults and grab progress indicator from the DOM
     let scrolling = false;
